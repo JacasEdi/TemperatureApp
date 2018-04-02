@@ -261,10 +261,8 @@ public class ledControl extends AppCompatActivity {
             int numBytes; // bytes returned from read()
 
             // Keep listening to the InputStream until an exception occurs.
-            while (true)
-            {
-                try
-                {
+            while (true) {
+                try {
                     // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
                     final String readMessage = new String(mmBuffer, 0, numBytes);
@@ -277,9 +275,7 @@ public class ledControl extends AppCompatActivity {
                             input.append(readMessage);
                         }
                     });
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     Log.d("KURWA_THREAD", "Input stream was disconnected", e);
                     break;
                 }
