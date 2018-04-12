@@ -7,14 +7,14 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,16 +27,17 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    // UI elements
-    ImageButton Discnt, Abt;
-    TextView input;
+    Button btnDisconnect;
+    Button btnAbout;
+    TextView tvInput;
     String address;
 
+    private boolean isBtConnected;
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth;
     ConnectedThread ct;
     BluetoothSocket btSocket;
-    private boolean isBtConnected;
+
     Handler handler;
 
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -48,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         handler = new Handler();
 
-        Discnt = findViewById(R.id.discnt);
-        Abt = findViewById(R.id.abt);
-        input = findViewById(R.id.tv_input);
+        btnDisconnect = findViewById(R.id.btn_disconnect);
+        btnAbout = findViewById(R.id.btn_about);
+        tvInput = findViewById(R.id.tv_input);
 
         Intent intent = getIntent();
 
@@ -59,28 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Connect to other device via Bluetooth
         new Connect().execute();
-
-        Discnt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Close Bluetooth connection
-                Disconnect();
-            }
-        });
-    }
-
-    private void Disconnect() {
-        if (btSocket != null)
-        {
-            try {
-                btSocket.close();
-            } catch (IOException e) {
-                msg("Error");
-            }
-        }
-
-        // Close this activity
-        finish();
     }
 
     private void turnOffLed() {
@@ -92,12 +71,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // fast way to call Toast
-    private void msg(String s) {
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+    private void displayToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 
-    public void about(View v) {
-        if (v.getId() == R.id.abt) {
+    public void onClickDisconnect(View v) {
+        if (btSocket != null)
+        {
+            try {
+                btSocket.close();
+            } catch (IOException e) {
+                displayToast("Error");
+            }
+        }
+
+        // Close this activity
+        finish();
+    }
+
+    public void onClickAbout(View v) {
+        if (v.getId() == R.id.btn_about) {
             Intent i = new Intent(this, AboutActivity.class);
             startActivity(i);
         }
@@ -112,17 +105,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here. The action bar will automatically handle clicks on
+        // the Home/Up button, so long as you specify a parent activity in AndroidManifest.xml
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
 
@@ -173,16 +160,16 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             if (!isConnected) {
-                msg("Connection Failed. Is it a SPP Bluetooth? Try again.");
+                displayToast("Connection Failed. Is it a SPP Bluetooth? Try again.");
                 finish();
             } else {
-                msg("Connected.");
+                displayToast("Connected.");
                 isBtConnected = true;
 
                 ct = new ConnectedThread(btSocket);
                 ct.start();
-                ct.write("cono".getBytes());
             }
+
             progress.dismiss();
         }
     }
@@ -199,13 +186,13 @@ public class MainActivity extends AppCompatActivity {
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
-            // Get the input and output streams; using temp objects because
-            // member streams are final.
+            // Get the input and output streams; using tmp objects because member streams are final
             try {
                 tmpIn = socket.getInputStream();
             } catch (IOException e) {
                 Log.e(TAG, "Error occurred when creating input stream", e);
             }
+
             try {
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
@@ -218,7 +205,9 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             mmBuffer = new byte[1024];
-            int numBytes; // bytes returned from read()
+
+            // Bytes returned from read()
+            int numBytes;
 
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
@@ -227,10 +216,12 @@ public class MainActivity extends AppCompatActivity {
                     numBytes = mmInStream.read(mmBuffer);
                     final String readMessage = new String(mmBuffer, 0, numBytes);
 
+                    Log.d(TAG, readMessage);
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            input.append(readMessage);
+                            tvInput.append(readMessage);
                         }
                     });
                 } catch (IOException e) {

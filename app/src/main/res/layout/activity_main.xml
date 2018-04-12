@@ -13,42 +13,37 @@
         android:text="Temperature Monitor"
         android:id="@+id/tv_title"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textColor="#ffffff"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title">
         <TextView
             android:id="@+id/tv_input"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cono"
-            android:layout_below="@id/tv_title"
             android:textColor="#ffffff" />
     </ScrollView>
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/discnt"
-        android:src="@drawable/disconnect"
-        android:background="@null"
+        android:id="@+id/btn_disconnect"
+        android:onClick="onClickDisconnect"
+        android:text="Disconnect"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <ImageButton
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/abt"
-        android:background="@null"
-        android:onClick="about"
-        android:src="@drawable/about"
+        android:id="@+id/btn_about"
+        android:onClick="onClickAbout"
+        android:text="About"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
