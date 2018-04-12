@@ -21,7 +21,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".ledControl" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".DeviceList" />
     </application>

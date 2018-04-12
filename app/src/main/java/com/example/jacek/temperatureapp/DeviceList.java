@@ -1,6 +1,7 @@
 package com.example.jacek.temperatureapp;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,13 +22,14 @@ import java.util.Set;
 
 public class DeviceList extends AppCompatActivity
 {
+    private static final String TAG = DeviceList.class.getSimpleName();
+
     //widgets
     Button btnPaired;
-    ListView devicelist;
+    ListView deviceList;
 
     //Bluetooth
     private BluetoothAdapter myBluetooth = null;
-    private Set<BluetoothDevice> pairedDevices;
     public static String EXTRA_ADDRESS = "device_address";
 
     @Override
@@ -36,9 +38,8 @@ public class DeviceList extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
 
-        //Calling widgets
-        btnPaired = (Button)findViewById(R.id.button);
-        devicelist = (ListView)findViewById(R.id.listView);
+        btnPaired = findViewById(R.id.button);
+        deviceList = findViewById(R.id.listView);
 
         //if the device has bluetooth
         myBluetooth = BluetoothAdapter.getDefaultAdapter();
@@ -70,27 +71,32 @@ public class DeviceList extends AppCompatActivity
 
     private void pairedDevicesList()
     {
-        pairedDevices = myBluetooth.getBondedDevices();
-        ArrayList list = new ArrayList();
+        Set<BluetoothDevice> pairedDevices = myBluetooth.getBondedDevices();
+        ArrayList availableDevices = new ArrayList();
 
         if (pairedDevices.size()>0)
         {
             for(BluetoothDevice bt : pairedDevices)
             {
-                list.add(bt.getName() + "\n" + bt.getAddress()); //Get the device's name and the address
+                availableDevices.add(bt.getName() + "\n" + bt.getAddress());
             }
         }
         else
         {
-            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found",
+                    Toast.LENGTH_LONG).show();
         }
 
-        final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, list);
-        devicelist.setAdapter(adapter);
-        devicelist.setOnItemClickListener(myListClickListener); //Method called when the device from the list is clicked
+        final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,
+                availableDevices);
+
+        deviceList.setAdapter(adapter);
+
+        deviceList.setOnItemClickListener(myListClickListener);
 
     }
 
+    // Handles onClick events on deviceList
     private AdapterView.OnItemClickListener myListClickListener = new AdapterView.OnItemClickListener()
     {
         public void onItemClick (AdapterView<?> av, View v, int arg2, long arg3)
@@ -99,13 +105,14 @@ public class DeviceList extends AppCompatActivity
             String info = ((TextView) v).getText().toString();
             String address = info.substring(info.length() - 17);
 
-            // Make an intent to start next activity.
-            Intent i = new Intent(DeviceList.this, ledControl.class);
 
-            //Change the activity.
-            i.putExtra(EXTRA_ADDRESS, address); //this will be received at ledControl (class) Activity
-            Log.d("DEVICELIST", "address: " + address);
-            startActivity(i);
+            Intent intent = new Intent(DeviceList.this, MainActivity.class);
+            intent.putExtra(EXTRA_ADDRESS, address);
+
+            Log.d(TAG, "address: " + address);
+
+            // Start MainActivity and pass selected device's address
+            startActivity(intent);
         }
     };
 
