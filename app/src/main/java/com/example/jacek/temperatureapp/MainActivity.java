@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +22,10 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.util.Set;
 import java.util.UUID;
 
@@ -62,11 +67,21 @@ public class MainActivity extends AppCompatActivity {
         new Connect().execute();
     }
 
-    private void turnOffLed() {
+    public void onClickRgbOn(View v)
+    {
+        if (btSocket != null) {
+            byte[] msg = "1".getBytes();
+            ct.write(msg);
+            Log.d(TAG, "Message: " + msg);
+        }
+    }
+
+    public void onClickRgbOff(View v)
+    {
         if (btSocket != null) {
             byte[] msg = "0".getBytes();
             ct.write(msg);
-            Log.d(TAG, "message written" + msg);
+            Log.d(TAG, "Message: " + msg);
         }
     }
 
@@ -76,8 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickDisconnect(View v) {
-        if (btSocket != null)
-        {
+        if (btSocket != null) {
             try {
                 btSocket.close();
             } catch (IOException e) {
@@ -114,8 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @SuppressLint("StaticFieldLeak")
-    private class Connect extends AsyncTask<Void, Void, Void>
-    {
+    private class Connect extends AsyncTask<Void, Void, Void> {
         private boolean isConnected = true;
 
         @Override
@@ -179,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
-        private byte[] mmBuffer; // mmBuffer store for the stream
+        private byte[] mmBuffer;
 
         public ConnectedThread(BluetoothSocket socket) {
             mmSocket = socket;
@@ -205,25 +218,33 @@ public class MainActivity extends AppCompatActivity {
 
         public void run() {
             mmBuffer = new byte[1024];
-
-            // Bytes returned from read()
             int numBytes;
 
-            // Keep listening to the InputStream until an exception occurs.
+            // Keep listening to the InputStream until an exception occurs
             while (true) {
                 try {
-                    // Read from the InputStream.
+                    // Read from the InputStream
                     numBytes = mmInStream.read(mmBuffer);
                     final String readMessage = new String(mmBuffer, 0, numBytes);
 
-                    Log.d(TAG, readMessage);
+                    Log.d(TAG, "Message: " + readMessage);
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            tvInput.append(readMessage);
-                        }
-                    });
+                    /*try {
+                        int temp = Integer.parseInt(readMessage);
+                    }
+                    catch (Exception e){
+                        Log.d(TAG, "Error when parsing integer", e);
+                    }*/
+
+                    if(!readMessage.equals(" "))
+                    {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                tvInput.setText(readMessage.trim());
+                            }
+                        });
+                    }
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);
                     break;
@@ -231,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // Call this from the main activity to send data to the remote device.
+        // Call this from the main activity to send data to the remote device
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);

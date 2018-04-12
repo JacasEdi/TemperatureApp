@@ -1,49 +1,72 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1d4851"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.jacek.temperatureapp.MainActivity"
-    android:background="#1d4851">
+    tools:context="com.example.jacek.temperatureapp.MainActivity">
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Temperature Monitor"
-        android:id="@+id/tv_title"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Temperature Monitor"
         android:textColor="#ffffff"
         android:textSize="20sp" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_title">
-        <TextView
-            android:id="@+id/tv_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff" />
-    </ScrollView>
-
-    <Button
+    <TextView
+        android:id="@+id/tv_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/rounded_textview"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="60sp" />
+
+    <Button
+        android:id="@+id/btn_rgb_on"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_rgb_off"
+        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickRgbOn"
+        android:text="RGB on" />
+
+    <Button
+        android:id="@+id/btn_rgb_off"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_disconnect"
+        android:layout_marginBottom="40dp"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickRgbOff"
+        android:text="RGB off" />
+
+    <Button
         android:id="@+id/btn_disconnect"
-        android:onClick="onClickDisconnect"
-        android:text="Disconnect"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_about"
-        android:onClick="onClickAbout"
-        android:text="About"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="onClickDisconnect"
+        android:text="Disconnect" />
+
+    <Button
+        android:id="@+id/btn_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onClickAbout"
+        android:text="About" />
 
 </RelativeLayout>
