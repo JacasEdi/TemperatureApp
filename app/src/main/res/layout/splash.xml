@@ -2,25 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
-    android:background="#da4c3f">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="252dp"
-        android:id="@+id/imageView2"
-        android:src="@drawable/led"
-        android:layout_marginTop="135dp"
-        android:layout_gravity="center_horizontal" />
+    android:background="#1d4851">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Temperature Monitor"
-        android:textSize="35dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="100dp"
+        android:text="Temperature\n    Monitor"
+        android:textSize="40dp"
+        android:fontFamily="casual"
         android:id="@+id/textView3"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center" />
 </LinearLayout>

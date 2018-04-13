@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                tvInput.setText(readMessage.trim());
+                                tvInput.setText(" " + readMessage.trim() + "°");
                             }
                         });
                     }

@@ -16,28 +16,4 @@ public class AboutActivity extends AppCompatActivity
         setContentView(R.layout.activity_about);
     }
 
-    public void fb(View view)
-    {
-        Intent fbIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/mayoogh"));
-        startActivity(fbIntent);
-    }
-
-    public void tweet(View view)
-    {
-        Intent tweetIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/mayoogh1997/"));
-        startActivity(tweetIntent);
-    }
-
-    public void insta(View view)
-    {
-        Intent instaIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mayoogh/"));
-        startActivity(instaIntent);
-    }
-
-
-    public void web(View view)
-    {
-        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://igniteinnovateideas.wordpress.com/"));
-        startActivity(webIntent);
-    }
 }
