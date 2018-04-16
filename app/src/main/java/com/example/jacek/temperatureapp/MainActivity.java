@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnDisconnect;
     Button btnAbout;
     TextView tvInput;
+    TextView tvHumidity;
     String address;
 
     private boolean isBtConnected;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         btnDisconnect = findViewById(R.id.btn_disconnect);
         btnAbout = findViewById(R.id.btn_about);
         tvInput = findViewById(R.id.tv_input);
+        tvHumidity = findViewById(R.id.tv_humidity);
 
         Intent intent = getIntent();
 
@@ -241,7 +243,10 @@ public class MainActivity extends AppCompatActivity {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                tvInput.setText(" " + readMessage.trim() + "°");
+                                tvInput.setText(" " + readMessage.trim().substring(0,2) + "°");
+
+                                if(readMessage.length() > 3)
+                                    tvHumidity.setText(readMessage.substring(2,4) + "%");
                             }
                         });
                     }

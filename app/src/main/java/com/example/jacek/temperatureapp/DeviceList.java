@@ -1,7 +1,8 @@
 package com.example.jacek.temperatureapp;
 
 import android.content.Intent;
-import android.nfc.Tag;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -38,8 +39,8 @@ public class DeviceList extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
 
-        btnPaired = findViewById(R.id.button);
-        deviceList = findViewById(R.id.listView);
+        btnPaired = findViewById(R.id.btn_get_paired);
+        deviceList = findViewById(R.id.lv_paired_devices);
 
         //if the device has bluetooth
         myBluetooth = BluetoothAdapter.getDefaultAdapter();
@@ -66,7 +67,6 @@ public class DeviceList extends AppCompatActivity
                 pairedDevicesList();
             }
         });
-
     }
 
     private void pairedDevicesList()
