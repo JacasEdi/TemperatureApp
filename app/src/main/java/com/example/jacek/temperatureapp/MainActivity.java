@@ -143,20 +143,24 @@ public class MainActivity extends AppCompatActivity {
         {
             try {
                 if (btSocket == null || !isBtConnected) {
-                    myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
+                    // Get reference to this device's Bluetooth adapter
+                    myBluetooth = BluetoothAdapter.getDefaultAdapter();
 
                     // Get the list of paired devices
                     Set<BluetoothDevice> pairedDevices = myBluetooth.getBondedDevices();
                     if (pairedDevices.size() > 0) {
-                        // There are paired devices. Get the name and address of each paired device.
+                        // There are paired devices. Get the name and address of each paired device
                         for (BluetoothDevice device : pairedDevices) {
                             String deviceName = device.getName();
                             String deviceHardwareAddress = device.getAddress(); // MAC address
                         }
                     }
 
-                    BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);//connects to the device's address and checks if it's available
-                    btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
+                    // Connect to the device's address and checks if it's available
+                    BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);
+
+                    // Create a RFCOMM (SPP) connection using provided UUID
+                    btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);
 
                     myBluetooth.cancelDiscovery();
 
@@ -229,24 +233,17 @@ public class MainActivity extends AppCompatActivity {
                     numBytes = mmInStream.read(mmBuffer);
                     final String readMessage = new String(mmBuffer, 0, numBytes);
 
-                    Log.d(TAG, "Message: " + readMessage);
-
-                    /*try {
-                        int temp = Integer.parseInt(readMessage);
-                    }
-                    catch (Exception e){
-                        Log.d(TAG, "Error when parsing integer", e);
-                    }*/
-
-                    if(!readMessage.equals(" "))
+                    if(readMessage.length() == 4)
                     {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 tvInput.setText(" " + readMessage.trim().substring(0,2) + "°");
+                                Log.d(TAG, "Message length: " + readMessage.length());
 
                                 if(readMessage.length() > 3)
-                                    tvHumidity.setText(readMessage.substring(2,4) + "%");
+                                    tvHumidity.setText(readMessage.substring(readMessage.length()-2,
+                                            readMessage.length()) + "%");
                             }
                         });
                     }
